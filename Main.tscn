@@ -103,6 +103,7 @@ offset_bottom = 46.0
 grow_horizontal = 0
 text = "X"
 
+[connection signal="item_clicked" from="PlayerList" to="." method="OnPlayerClicked"]
 [connection signal="text_changed" from="Name" to="." method="UpdateName"]
 [connection signal="text_submitted" from="Message" to="." method="Enter"]
 [connection signal="pressed" from="Menu/Host" to="." method="Host"]

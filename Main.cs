@@ -123,4 +123,20 @@ public partial class Main : Control
 	{
 		GetTree().Quit();
 	}
+	public void OnPlayerClicked(int index, Vector2 position, int buttonIndex)
+	{
+		var label = new Label();
+		PlayersList.AddChild(label);
+		label.Text = PlayersList.GetItemText(index);
+		label.Size = new Vector2(100, 20);
+		foreach (var item in PlayerPeerList)
+		{
+			if (item.Value == PlayersList.GetItemText(index))
+			{
+				label.Text += $"\n({item.Key})";
+			}
+		}
+		label.Position = position;
+		GetTree().CreateTimer(1).Timeout += () => label.QueueFree();
+	}
 }
