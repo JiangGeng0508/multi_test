@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://beajlijtj26k1"]
+
+[ext_resource type="Script" uid="uid://b173pto0ok26y" path="res://MainScene.cs" id="1_3mqji"]
+[ext_resource type="PackedScene" uid="uid://bmoulxv35htms" path="res://ChatRoom.tscn" id="2_x4av3"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 87.0
+offset_bottom = 31.0
+
+[node name="ChatRoom" parent="." instance=ExtResource("2_x4av3")]
+layout_mode = 1
+
+[node name="MainMenu" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 314.0
+offset_bottom = 31.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_3mqji")
+
+[node name="Host" type="Button" parent="MainMenu"]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="MainMenu"]
+layout_mode = 2
+text = "Join
+"
+
+[node name="IP" type="LineEdit" parent="MainMenu"]
+layout_mode = 2
+placeholder_text = "IP:localhost"
+expand_to_text_length = true
+
+[node name="Port" type="LineEdit" parent="MainMenu"]
+layout_mode = 2
+placeholder_text = "Port:25565"
+expand_to_text_length = true
+
+[connection signal="JoinSuccess" from="MainMenu" to="ChatRoom" method="Join"]
+[connection signal="pressed" from="MainMenu/Host" to="MainMenu" method="Host"]
+[connection signal="pressed" from="MainMenu/Join" to="MainMenu" method="Join"]
+[connection signal="text_changed" from="MainMenu/IP" to="MainMenu" method="SetAddress"]
+[connection signal="text_changed" from="MainMenu/Port" to="MainMenu" method="SetPort"]
