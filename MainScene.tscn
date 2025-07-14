@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://beajlijtj26k1"]
+[gd_scene load_steps=4 format=3 uid="uid://beajlijtj26k1"]
 
 [ext_resource type="Script" uid="uid://b173pto0ok26y" path="res://MainScene.cs" id="1_3mqji"]
-[ext_resource type="PackedScene" uid="uid://bmoulxv35htms" path="res://ChatRoom.tscn" id="2_x4av3"]
+[ext_resource type="Script" uid="uid://dkdya11qkiqj" path="res://ChatRoom.cs" id="1_rpqi1"]
+[ext_resource type="Script" uid="uid://ds82nh2gluc15" path="res://MessegeList.cs" id="2_uxrcv"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -9,8 +10,57 @@ anchors_preset = 0
 offset_right = 87.0
 offset_bottom = 31.0
 
-[node name="ChatRoom" parent="." instance=ExtResource("2_x4av3")]
+[node name="ChatRoom" type="Control" parent="."]
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rpqi1")
+
+[node name="Message" type="LineEdit" parent="ChatRoom"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 567.0
+offset_right = 525.0
+offset_bottom = 606.0
+placeholder_text = "Type something and press enter"
+clear_button_enabled = true
+
+[node name="Name" type="LineEdit" parent="ChatRoom"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 530.0
+offset_right = 125.0
+offset_bottom = 561.0
+text = "Nameless"
+placeholder_text = "Name"
+alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="ChatRoom"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 0
+offset_left = 47.0
+offset_top = 173.0
+offset_right = 547.0
+offset_bottom = 473.0
+
+[node name="MessegeList" type="ItemList" parent="ChatRoom/Scroll"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 2
+size_flags_horizontal = 0
+script = ExtResource("2_uxrcv")
+
+[node name="Refresh" type="Button" parent="ChatRoom/Scroll/MessegeList"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -68.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Refresh"
 
 [node name="MainMenu" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -31,16 +81,15 @@ text = "Join
 
 [node name="IP" type="LineEdit" parent="MainMenu"]
 layout_mode = 2
-placeholder_text = "IP:localhost"
+placeholder_text = "frp-end.com:13677"
 expand_to_text_length = true
 
-[node name="Port" type="LineEdit" parent="MainMenu"]
-layout_mode = 2
-placeholder_text = "Port:25565"
-expand_to_text_length = true
-
-[connection signal="JoinSuccess" from="MainMenu" to="ChatRoom" method="Join"]
+[connection signal="SaySignal" from="ChatRoom" to="ChatRoom/Scroll/MessegeList" method="AddMessage"]
+[connection signal="text_submitted" from="ChatRoom/Message" to="ChatRoom" method="Enter"]
+[connection signal="text_changed" from="ChatRoom/Name" to="ChatRoom" method="UpdateName"]
+[connection signal="pressed" from="ChatRoom/Scroll/MessegeList/Refresh" to="ChatRoom/Scroll/MessegeList" method="Refresh"]
+[connection signal="JoinSuccessSignal" from="MainMenu" to="ChatRoom" method="Join"]
+[connection signal="Log" from="MainMenu" to="ChatRoom/Scroll/MessegeList" method="AddMessage"]
 [connection signal="pressed" from="MainMenu/Host" to="MainMenu" method="Host"]
 [connection signal="pressed" from="MainMenu/Join" to="MainMenu" method="Join"]
 [connection signal="text_changed" from="MainMenu/IP" to="MainMenu" method="SetAddress"]
-[connection signal="text_changed" from="MainMenu/Port" to="MainMenu" method="SetPort"]

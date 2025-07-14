@@ -4,9 +4,11 @@ using System;
 public partial class MainScene : HBoxContainer
 {
 	[Signal]
-	public delegate void JoinSuccessEventHandler();
-	public int Port = 25565;
-	public string Address = "127.0.0.1";
+	public delegate void JoinSuccessSignalEventHandler();
+	[Signal]
+	public delegate void LogEventHandler(string message,string name);
+	public int Port = 13677;
+	public string Address = "frp-end.com";
 	public ENetMultiplayerPeer Peer;
 
 	public override void _Ready()
@@ -21,8 +23,9 @@ public partial class MainScene : HBoxContainer
 			Peer.Close();
 		}
 		Peer = new ENetMultiplayerPeer();
-		Peer.CreateServer(Port);
+		Peer.CreateServer(25565);
 		Multiplayer.MultiplayerPeer = Peer;
+		EmitSignal(nameof(Log),"Server created","System");
 	}
 	public void Join()
 	{
@@ -36,23 +39,27 @@ public partial class MainScene : HBoxContainer
 	}
 	public void OnPeerConnected(long peerId)
 	{
-		if (peerId == 1)
-		return;
-		GD.Print($"{Multiplayer.GetUniqueId()} Peer connected: {peerId}");
-		EmitSignal(nameof(JoinSuccess));
+		GD.Print($"Peer connected: {peerId}");
+		RpcId(peerId, "JoinSuccess");
+	}
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void JoinSuccess()
+	{
+		if (Peer.GetUniqueId() == 1)
+		{
+			return;
+		}
+		GD.Print($"{Peer.GetUniqueId()} Join success");
+		EmitSignal(nameof(JoinSuccessSignal));
 	}
 	public void OnPeerDisconnected(long peerId)
 	{
-		GD.Print($"{Multiplayer.GetUniqueId()} Peer disconnected: {peerId}");
+		GD.Print($"Peer disconnected: {peerId}");
 	}
 	public void SetAddress(string address)
 	{
-		Address = address;
-		GD.Print($"Address set to {Address}");
-	}
-	public void SetPort(string port)
-	{
-		Port = port.ToInt();
-		GD.Print($"Port set to {Port}");
+		Address = address.Split(':')[0];
+		Port = int.Parse(address.Split(':')[1]);
+		GD.Print($"Address set to {Address}:{Port}");
 	}
 }

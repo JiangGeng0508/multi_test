@@ -3,7 +3,7 @@ using System;
 
 public partial class MessegeList : ItemList
 {
-	public void AddMessage(string name, string message)
+	public void AddMessage(string message, string name)
 	{
 		AddItem(name + ": " + message);
 	}
