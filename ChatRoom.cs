@@ -27,6 +27,6 @@ public partial class ChatRoom : Control
 	public void Join()
 	{
 		Rpc(nameof(Say), "System", $"{NickName} joined the chat room.");
-		EmitSignal(nameof(SaySignal), "System", $"{NickName} joined the chat room.");
+		EmitSignal(nameof(SaySignal), "System", $"You Joined the chat room.");
 	}
 }

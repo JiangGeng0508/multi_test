@@ -12,6 +12,7 @@ public partial class MainScene : HBoxContainer
 	public override void _Ready()
 	{
 		Multiplayer.PeerConnected += OnPeerConnected;
+		Multiplayer.PeerDisconnected += OnPeerDisconnected;
 	}
 	public void Host()
 	{
@@ -39,6 +40,10 @@ public partial class MainScene : HBoxContainer
 		return;
 		GD.Print($"{Multiplayer.GetUniqueId()} Peer connected: {peerId}");
 		EmitSignal(nameof(JoinSuccess));
+	}
+	public void OnPeerDisconnected(long peerId)
+	{
+		GD.Print($"{Multiplayer.GetUniqueId()} Peer disconnected: {peerId}");
 	}
 	public void SetAddress(string address)
 	{
