@@ -58,7 +58,6 @@ offset_top = -148.0
 offset_right = 138.0
 offset_bottom = -97.0
 grow_vertical = 0
-text = "Nameless"
 placeholder_text = "Name"
 
 [node name="Message" type="LineEdit" parent="."]

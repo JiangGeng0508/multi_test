@@ -35,6 +35,7 @@ public partial class Main : Control
 		PlayerPeerList.Clear();
 		MessageList.Clear();
 		PlayersList.Clear();
+		NickName = "Server";
 		SendMessage("Server created", "System");
 		JoinList(NickName, 1);
 	}
@@ -53,6 +54,7 @@ public partial class Main : Control
 		PlayerPeerList.Clear();
 		MessageList.Clear();
 		PlayersList.Clear();
+		NickName = "Player"+Multiplayer.GetUniqueId();
 		SendMessage($"Welcome {NickName}", "System");
 		JoinList(NickName, Multiplayer.GetUniqueId());
 		GetNode<Label>("PlayerList/UniqueId").Text = Multiplayer.GetUniqueId().ToString();
@@ -86,13 +88,15 @@ public partial class Main : Control
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void ChangeNickName(long peerId, string NewName)
 	{
+		if (PlayerPeerList.Values.Contains(NewName))
+			return;
 		if (PlayerPeerList.TryGetValue(peerId, out string value))
-		{
-			PlayersList.SetItemText(PlayerIndexList[value], NewName);
-			PlayerIndexList[NewName] = PlayerIndexList[value];
-			PlayerIndexList.Remove(value);
-			PlayerPeerList[peerId] = NewName;
-		}
+			{
+				PlayersList.SetItemText(PlayerIndexList[value], NewName);
+				PlayerIndexList[NewName] = PlayerIndexList[value];
+				PlayerIndexList.Remove(value);
+				PlayerPeerList[peerId] = NewName;
+			}
 	}
 	public void SetAddress(string address)//<-
 	{
@@ -112,12 +116,13 @@ public partial class Main : Control
 	{
 		SendMessage(message, "You");
 		Rpc(nameof(SendMessage), message, NickName);
+		GetNode<LineEdit>("Message").Text = "";
 	}
 	public void UpdateName(string name)//<-
 	{
-		NickName = name;
-		Rpc(nameof(ChangeNickName), Multiplayer.GetUniqueId(), NickName);
+		Rpc(nameof(ChangeNickName), Multiplayer.GetUniqueId(), name);
 		ChangeNickName(Multiplayer.GetUniqueId(), name);
+		NickName = name;
 	}
 	public void Quit()//<-
 	{
