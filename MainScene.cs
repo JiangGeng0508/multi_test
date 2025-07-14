@@ -7,6 +7,7 @@ public partial class MainScene : HBoxContainer
 	public delegate void JoinSuccessEventHandler();
 	public int Port = 25565;
 	public string Address = "127.0.0.1";
+	public ENetMultiplayerPeer Peer;
 
 	public override void _Ready()
 	{
@@ -14,15 +15,23 @@ public partial class MainScene : HBoxContainer
 	}
 	public void Host()
 	{
-		var server = new ENetMultiplayerPeer();
-		server.CreateServer(Port);
-		Multiplayer.MultiplayerPeer = server;
+		if (Peer != null)
+		{
+			Peer.Close();
+		}
+		Peer = new ENetMultiplayerPeer();
+		Peer.CreateServer(Port);
+		Multiplayer.MultiplayerPeer = Peer;
 	}
 	public void Join()
 	{
-		var client = new ENetMultiplayerPeer();
-		client.CreateClient(Address, Port);
-		Multiplayer.MultiplayerPeer = client;
+		if (Peer != null)
+		{
+			Peer.Close();
+		}
+		Peer = new ENetMultiplayerPeer();
+		Peer.CreateClient(Address, Port);
+		Multiplayer.MultiplayerPeer = Peer;
 	}
 	public void OnPeerConnected(long peerId)
 	{
