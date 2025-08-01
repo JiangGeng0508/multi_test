@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgncv35glrhsr"]
+
+[ext_resource type="Script" uid="uid://be33yr2jh1pbq" path="res://MoveTest.cs" id="1_lxt6o"]
+[ext_resource type="PackedScene" uid="uid://dslfeuce0aqlo" path="res://SimpChara.tscn" id="2_37rks"]
+
+[node name="MoveTest" type="Node2D"]
+script = ExtResource("1_lxt6o")
+CharaScene = ExtResource("2_37rks")
+
+[node name="Menu" type="HBoxContainer" parent="."]
+offset_right = 244.0
+offset_bottom = 52.0
+
+[node name="Host" type="Button" parent="Menu"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="Menu"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+text = "Join"
+
+[node name="Address" type="LineEdit" parent="Menu"]
+layout_mode = 2
+placeholder_text = "frp-end.com:13677"
+expand_to_text_length = true
+
+[node name="ReferenceRect" type="ReferenceRect" parent="Menu/Address"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+editor_only = false
+
+[node name="Id" type="Label" parent="."]
+offset_left = 2.0
+offset_top = 54.0
+offset_right = 106.0
+offset_bottom = 85.0
+
+[node name="Spawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://dslfeuce0aqlo")
+spawn_path = NodePath("..")
+
+[connection signal="pressed" from="Menu/Host" to="." method="Host"]
+[connection signal="pressed" from="Menu/Join" to="." method="Join"]
+[connection signal="focus_entered" from="Menu/Address" to="Menu/Address/ReferenceRect" method="show"]
+[connection signal="text_submitted" from="Menu/Address" to="." method="SetAddress"]

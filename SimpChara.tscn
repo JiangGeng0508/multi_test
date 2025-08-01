@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://dslfeuce0aqlo"]
+
+[ext_resource type="Script" uid="uid://mcmwl353o11x" path="res://SimpChara.cs" id="1_uyuse"]
+[ext_resource type="Texture2D" uid="uid://14kuxjf18dmx" path="res://icon.svg" id="1_wrleg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wrleg"]
+size = Vector2(128, 128)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uyuse"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="SimpChara" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_uyuse")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_wrleg")
+
+[node name="Icon" type="Sprite2D" parent="."]
+texture = ExtResource("1_wrleg")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_uyuse")

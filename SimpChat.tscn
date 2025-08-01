@@ -73,7 +73,6 @@ grow_vertical = 0
 placeholder_text = "Type something and press enter"
 
 [node name="Menu" type="HBoxContainer" parent="."]
-layout_mode = 0
 offset_right = 244.0
 offset_bottom = 52.0
 
