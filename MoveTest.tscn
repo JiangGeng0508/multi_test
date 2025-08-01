@@ -7,26 +7,35 @@
 script = ExtResource("1_lxt6o")
 CharaScene = ExtResource("2_37rks")
 
-[node name="Menu" type="HBoxContainer" parent="."]
-offset_right = 244.0
-offset_bottom = 52.0
+[node name="Spawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://dslfeuce0aqlo")
+spawn_path = NodePath("..")
 
-[node name="Host" type="Button" parent="Menu"]
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Menu" type="HBoxContainer" parent="Camera2D"]
+offset_left = -576.0
+offset_top = -323.0
+offset_right = -314.0
+offset_bottom = -273.0
+size_flags_horizontal = 0
+
+[node name="Host" type="Button" parent="Camera2D/Menu"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 text = "Host"
 
-[node name="Join" type="Button" parent="Menu"]
+[node name="Join" type="Button" parent="Camera2D/Menu"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 text = "Join"
 
-[node name="Address" type="LineEdit" parent="Menu"]
+[node name="Address" type="LineEdit" parent="Camera2D/Menu"]
 layout_mode = 2
 placeholder_text = "frp-end.com:13677"
 expand_to_text_length = true
 
-[node name="ReferenceRect" type="ReferenceRect" parent="Menu/Address"]
+[node name="ReferenceRect" type="ReferenceRect" parent="Camera2D/Menu/Address"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -36,17 +45,13 @@ grow_horizontal = 2
 grow_vertical = 2
 editor_only = false
 
-[node name="Id" type="Label" parent="."]
-offset_left = 2.0
-offset_top = 54.0
-offset_right = 106.0
-offset_bottom = 85.0
+[node name="Id" type="Label" parent="Camera2D"]
+offset_left = -574.0
+offset_top = -271.0
+offset_right = -470.0
+offset_bottom = -240.0
 
-[node name="Spawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("uid://dslfeuce0aqlo")
-spawn_path = NodePath("..")
-
-[connection signal="pressed" from="Menu/Host" to="." method="Host"]
-[connection signal="pressed" from="Menu/Join" to="." method="Join"]
-[connection signal="focus_entered" from="Menu/Address" to="Menu/Address/ReferenceRect" method="show"]
-[connection signal="text_submitted" from="Menu/Address" to="." method="SetAddress"]
+[connection signal="pressed" from="Camera2D/Menu/Host" to="." method="Host"]
+[connection signal="pressed" from="Camera2D/Menu/Join" to="." method="Join"]
+[connection signal="focus_entered" from="Camera2D/Menu/Address" to="Camera2D/Menu/Address/ReferenceRect" method="show"]
+[connection signal="text_submitted" from="Camera2D/Menu/Address" to="." method="SetAddress"]

@@ -39,7 +39,8 @@ public partial class MoveTest : Node2D
 	}
 	public void OnPeerConnected(long peerId)
 	{
-		GetNode<Label>("Id").Text = Multiplayer.GetUniqueId().ToString();
+		GetNode<Label>("Camera2D/Id").Text = Multiplayer.GetUniqueId().ToString();
+		// SpawnChara((int)peerId);
 		Rpc(nameof(SpawnChara), peerId);
 		// Rpc(nameof(SpawnChara), Multiplayer.GetUniqueId());	
 	}
@@ -48,17 +49,20 @@ public partial class MoveTest : Node2D
 		Address = address.Split(':')[0];
 		Port = int.Parse(address.Split(':')[1]);
 	}
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false)]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	public void SpawnChara(int peerId)
 	{
 		GD.Print(Multiplayer.GetRemoteSenderId() + " " + peerId);
-		Spawner.Spawn(new string[] { $"SimpChara{peerId}", peerId.ToString(), });
+		Spawner.Spawn(new string[] { $"SimpChara{peerId}", Multiplayer.GetRemoteSenderId().ToString() });
+
 	}
 	public Node Spawn(Variant data)
 	{
 		var chara = CharaScene.Instantiate<SimpChara>();
 		var arr = data.AsStringArray();
 		chara.Name = arr[0];
+		chara.Position = new Vector2(GD.Randf() * 1000f - 500f, GD.Randf() * 500f - 250f);
+		chara.AddChild(new Label { Text = arr[1] });
 		chara.SetMultiplayerAuthority(arr[1].ToInt());
 		return chara;
 	}

@@ -38,7 +38,6 @@ public partial class SimpChara : CharacterBody2D
 		if (what == MainLoop.NotificationApplicationFocusOut)
 		{
 			axis = Vector2.Zero;
-			PressFlag = [false, false, false, false];
 		}
 	}
 }
