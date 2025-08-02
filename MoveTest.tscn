@@ -1,15 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://dgncv35glrhsr"]
+[gd_scene load_steps=4 format=3 uid="uid://dgncv35glrhsr"]
 
 [ext_resource type="Script" uid="uid://be33yr2jh1pbq" path="res://MoveTest.cs" id="1_lxt6o"]
 [ext_resource type="PackedScene" uid="uid://dslfeuce0aqlo" path="res://SimpChara.tscn" id="2_37rks"]
+[ext_resource type="Script" uid="uid://h5spuk1gedic" path="res://Spawner.cs" id="3_5s6ho"]
 
 [node name="MoveTest" type="Node2D"]
 script = ExtResource("1_lxt6o")
-CharaScene = ExtResource("2_37rks")
 
 [node name="Spawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://dslfeuce0aqlo")
 spawn_path = NodePath("..")
+script = ExtResource("3_5s6ho")
+CharaScene = ExtResource("2_37rks")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 

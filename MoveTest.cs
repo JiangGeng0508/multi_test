@@ -3,19 +3,19 @@ using Godot;
 public partial class MoveTest : Node2D
 {
 	[Export]
-	public PackedScene CharaScene { get; set; }
-	public MultiplayerSpawner Spawner;
+	public string SpawnPath { get; set; } = ".";
 	public int Port = 25565;
 	public string Address = "127.0.0.1";
 	public ENetMultiplayerPeer Peer;
+	public Spawner Spawner;
 
 	public override void _Ready()
 	{
-		Spawner = GetNode<MultiplayerSpawner>("Spawner");
-		Spawner.SpawnFunction = new Callable(this, nameof(Spawn));
 		Multiplayer.PeerConnected += OnPeerConnected;
+		Multiplayer.ConnectedToServer += OnConnetToServer;
+		Spawner = GetNode<Spawner>("Spawner");
 	}
-	public void Host()//<-
+	public void Host()
 	{
 		Peer?.Close();
 		Peer = new ENetMultiplayerPeer();
@@ -25,6 +25,7 @@ public partial class MoveTest : Node2D
 			return;
 		}
 		Multiplayer.MultiplayerPeer = Peer;
+		Spawner.SpawnChara(1);
 	}
 	public void Join()//<-
 	{
@@ -37,33 +38,22 @@ public partial class MoveTest : Node2D
 		}
 		Multiplayer.MultiplayerPeer = Peer;
 	}
-	public void OnPeerConnected(long peerId)
-	{
-		GetNode<Label>("Camera2D/Id").Text = Multiplayer.GetUniqueId().ToString();
-		// SpawnChara((int)peerId);
-		Rpc(nameof(SpawnChara), peerId);
-		// Rpc(nameof(SpawnChara), Multiplayer.GetUniqueId());	
-	}
 	public void SetAddress(string address)//<-
 	{
 		Address = address.Split(':')[0];
 		Port = int.Parse(address.Split(':')[1]);
 	}
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-	public void SpawnChara(int peerId)
+	public void OnPeerConnected(long peerId)
 	{
-		GD.Print(Multiplayer.GetRemoteSenderId() + " " + peerId);
-		Spawner.Spawn(new string[] { $"SimpChara{peerId}", Multiplayer.GetRemoteSenderId().ToString() });
-
+		GetNode<Label>("Camera2D/Id").Text = Multiplayer.GetUniqueId().ToString();
+		if (Multiplayer.IsServer())
+		{
+			Spawner.SpawnChara(peerId);
+		}
 	}
-	public Node Spawn(Variant data)
+	public void OnConnetToServer()
 	{
-		var chara = CharaScene.Instantiate<SimpChara>();
-		var arr = data.AsStringArray();
-		chara.Name = arr[0];
-		chara.Position = new Vector2(GD.Randf() * 1000f - 500f, GD.Randf() * 500f - 250f);
-		chara.AddChild(new Label { Text = arr[1] });
-		chara.SetMultiplayerAuthority(arr[1].ToInt());
-		return chara;
+		Spawner.SpawnChara(Multiplayer.GetUniqueId());
 	}
+	
 }
