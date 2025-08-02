@@ -46,13 +46,13 @@ public partial class MoveTest : Node2D
 	public void OnPeerConnected(long peerId)
 	{
 		GetNode<Label>("Camera2D/Id").Text = Multiplayer.GetUniqueId().ToString();
-		if (Multiplayer.IsServer())
-		{
-			Spawner.SpawnChara(peerId);
-		}
+		Spawner.SpawnChara(peerId);
 	}
 	public void OnConnetToServer()
 	{
+		if (Multiplayer.IsServer()) return;
+
+		GD.Print($"Im client and I Spawn {Multiplayer.GetUniqueId()}");
 		Spawner.SpawnChara(Multiplayer.GetUniqueId());
 	}
 	

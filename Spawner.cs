@@ -5,13 +5,9 @@ public partial class Spawner : MultiplayerSpawner
 {
 	[Export]
 	public PackedScene CharaScene { get; set; }
-	public override void _Ready()
-	{
-		Multiplayer.PeerConnected += SpawnChara;
-	}
 	public void SpawnChara(long peerId = 1)
 	{
-		GD.Print($"Spawn {peerId}");
+		GD.Print($"Im {Multiplayer.GetUniqueId()} and I Spawn {peerId}");
 		var chara = CharaScene.Instantiate<SimpChara>();
 		chara.Name = $"SimpChara{peerId}";
 		chara.Position = new Vector2(GD.Randf() * 1000f - 500f, GD.Randf() * 500f - 250f);
